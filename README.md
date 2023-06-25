@@ -16,5 +16,10 @@ kubectl scale deployment my-app-v2 --replicas=0 -n josh
 
 kubectl scale deployment my-app-v2 --replicas=3 -n josh
 
+# Rolling update 
+
+![image](https://github.com/joshking1/Deployment-Stratergies/assets/88409463/0e20e562-cc05-4da5-8442-cdf4e0a667df)
+
+
 
 
