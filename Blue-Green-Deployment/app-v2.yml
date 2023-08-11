@@ -15,7 +15,6 @@ spec:
   # Note here that we match both the app and the version
   selector:
     app: my-app
-    version: v2.0.0
 ---
 apiVersion: apps/v1
 kind: Deployment
