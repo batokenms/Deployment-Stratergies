@@ -1,28 +1,26 @@
 ---
+# Step 2: Expose the Deployment
 apiVersion: v1
 kind: Service
 metadata:
-  name: my-app
-  labels:
-    app: my-app
+  name: nginx-service
 spec:
-  type: NodePort
-  ports:
-  - name: http
-    port: 80
-    targetPort: http
   selector:
-    app: my-app
+    app: nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
 ---
+# Step 1: Create NGINX Deployment
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: my-app
-  labels:
-    app: my-app
+  name: nginx-deployment
 spec:
-  replicas: 5
-
+  replicas: 5  # Number of instances of NGINX running
   # Here we define the rolling update strategy
   # - maxSurge define how many pod we can add at a time
   # - maxUnavailable define how many pod can be unavailable
@@ -44,36 +42,14 @@ spec:
   # field from there.
   selector:
     matchLabels:
-      app: my-app
+      app: nginx
   template:
     metadata:
       labels:
-        app: my-app
-        version: v2.0.0
+        app: nginx
     spec:
       containers:
-      - name: my-app
-        image: deekshithsn/k8s-deployment-strategies
-        ports:
-        - name: http
-          containerPort: 8080
-        - name: probe
-          containerPort: 8086
-        env:
-        - name: VERSION
-          value: v2.0.0
-        livenessProbe:
-          httpGet:
-            path: /live
-            port: probe
-          initialDelaySeconds: 5
-          periodSeconds: 5
-        readinessProbe:
-          httpGet:
-            path: /ready
-            port: probe
-
-          # Intial delay is set to a high value to have a better
-          # visibility of the ramped deployment
-          initialDelaySeconds: 15
-          periodSeconds: 5
+        - name: nginx
+          image: nginx:stable-alpine3.17-slim
+          ports:
+            - containerPort: 80
